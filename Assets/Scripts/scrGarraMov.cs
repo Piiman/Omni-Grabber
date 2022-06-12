@@ -144,11 +144,7 @@ public class scrGarraMov : MonoBehaviour
                     //TODO: en lugar de esperar a que cierre/abra por completo esperar n segundos a que abra/cierre
                     if(!boolOpenClaw){
                         voidOpenClaw();
-                    }
-
-                    if(boolCheckOpen() && !boolWait){
-                        boolWait = true;
-                        StartCoroutine(proceedAfter(floatOpenCatch));
+                        StartCoroutine(proceedAfter(floatOpenCatch + 0.5f));
                     }
                     break;
                 case 3:
@@ -157,11 +153,7 @@ public class scrGarraMov : MonoBehaviour
                 case 4:
                     if(boolOpenClaw){
                         voidCloseClaw();
-                    }
-
-                    if(boolCheckClose() && !boolWait){
-                        boolWait = true;
-                        StartCoroutine(proceedAfter(floatCloseCatch));
+                        StartCoroutine(proceedAfter(floatCloseCatch + 0.5f));
                     }
                     break;
                 case 5:
@@ -180,21 +172,13 @@ public class scrGarraMov : MonoBehaviour
                 case 8:
                     if(!boolOpenClaw){
                         voidOpenClaw();
-                    }
-
-                    if(boolCheckOpen()  && !boolWait){
-                        boolWait = true;
-                        StartCoroutine(proceedAfter(floatOpenRelease));
+                        StartCoroutine(proceedAfter(floatOpenRelease + 0.5f));
                     }
                     break;
                 case 9:
                     if(boolOpenClaw){
                         voidCloseClaw();
-                    }
-
-                    if(boolCheckClose()  && !boolWait){
-                        boolWait = true;
-                        StartCoroutine(proceedAfter(floatCloseRelease));
+                        StartCoroutine(proceedAfter(floatCloseRelease + 0.5f));
                     }
                     break;
                 //---------------Fin fase de soltar---------------
