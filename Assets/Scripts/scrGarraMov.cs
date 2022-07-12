@@ -67,7 +67,6 @@ public class scrGarraMov : MonoBehaviour
     private bool boolHold;
     private bool boolBreak;
     private bool boolOpenClaw;
-    private bool boolWait;
 
     void Start()
     {
@@ -77,7 +76,6 @@ public class scrGarraMov : MonoBehaviour
         boolHold = false;
         boolBreak = false;
         boolOpenClaw = false;
-        boolWait = false;
 
         //init left claw
         voidInitArm(clawArmLeft);
@@ -141,10 +139,9 @@ public class scrGarraMov : MonoBehaviour
                 //---------------Fin fase control de jugador---------------
                 //---------------Inicio fase de agarre---------------
                 case 2:
-                    //TODO: en lugar de esperar a que cierre/abra por completo esperar n segundos a que abra/cierre
                     if(!boolOpenClaw){
-                        voidOpenClaw();
-                        StartCoroutine(proceedAfter(floatOpenCatch + 0.5f));
+                        voidOpenArms();
+                        StartCoroutine(proceedAfter(floatOpenCatch));
                     }
                     break;
                 case 3:
@@ -152,8 +149,8 @@ public class scrGarraMov : MonoBehaviour
                     break;
                 case 4:
                     if(boolOpenClaw){
-                        voidCloseClaw();
-                        StartCoroutine(proceedAfter(floatCloseCatch + 0.5f));
+                        voidCloseArms();
+                        StartCoroutine(proceedAfter(floatCloseCatch));
                     }
                     break;
                 case 5:
@@ -171,14 +168,14 @@ public class scrGarraMov : MonoBehaviour
                 //---------------Inicio fase de soltar---------------
                 case 8:
                     if(!boolOpenClaw){
-                        voidOpenClaw();
-                        StartCoroutine(proceedAfter(floatOpenRelease + 0.5f));
+                        voidOpenArms();
+                        StartCoroutine(proceedAfter(floatOpenRelease));
                     }
                     break;
                 case 9:
                     if(boolOpenClaw){
-                        voidCloseClaw();
-                        StartCoroutine(proceedAfter(floatCloseRelease + 0.5f));
+                        voidCloseArms();
+                        StartCoroutine(proceedAfter(floatCloseRelease));
                     }
                     break;
                 //---------------Fin fase de soltar---------------
@@ -193,42 +190,22 @@ public class scrGarraMov : MonoBehaviour
         }
     }
 
-    void voidSetBreakState() {
+    public void voidSetBreakState() {
         boolHold = false;
         boolBreak = true;
     }
 
-    void voidOpenClaw() {
-        HingeJoint hingeLeftClaw = clawArmLeft.GetComponent<HingeJoint>();
-        HingeJoint hingeRightClaw = clawArmRight.GetComponent<HingeJoint>();
-
-        hingeLeftClaw.useMotor = true;
-        hingeRightClaw.useMotor = true;
+    void voidOpenArms() {
+        clawArmLeft.GetComponent<scrClawArm>().Open();
+        clawArmRight.GetComponent<scrClawArm>().Open();
+        
         boolOpenClaw = true;
     }
 
-    bool boolCheckOpen() {
-        //to easy code
-        bool leftOpen = Mathf.Approximately(clawArmLeft.transform.rotation.eulerAngles.z, floatMaxOpening);
-        bool rightOpen = Mathf.Approximately(clawArmRight.transform.rotation.eulerAngles.z, floatMaxOpening);
-    
-        return (leftOpen && rightOpen);
-    }
-
-    bool boolCheckClose() {
-        //to easy code
-        bool leftClosed = Mathf.Approximately(clawArmLeft.transform.rotation.eulerAngles.z, floatMaxOpening);
-        bool rightClosed = Mathf.Approximately(clawArmRight.transform.rotation.eulerAngles.z, floatMaxOpening);
-    
-        return (leftClosed && rightClosed);
-    }
-
-    void voidCloseClaw() {
-        HingeJoint hingeLeftClaw = clawArmLeft.GetComponent<HingeJoint>();
-        HingeJoint hingeRightClaw = clawArmRight.GetComponent<HingeJoint>();
-
-        hingeLeftClaw.useMotor = false;
-        hingeRightClaw.useMotor = false;
+    void voidCloseArms() {
+        clawArmLeft.GetComponent<scrClawArm>().Close();
+        clawArmRight.GetComponent<scrClawArm>().Close();
+        
         boolOpenClaw = false;
     }
 
@@ -265,6 +242,5 @@ public class scrGarraMov : MonoBehaviour
     {
         yield return new WaitForSeconds(floatWaitTime);
         voidSetBreakState();
-        boolWait = false;
     }
 }
